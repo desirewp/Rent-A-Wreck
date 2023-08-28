@@ -1,163 +1,181 @@
 ﻿using static System.Console;
-Title = "Rent a Wreck";
 
-/*--------Start data---------*/
-//Skapar en tom lista att lagra foron i
-List<Vehichle> vehichles = new List<Vehichle>();
-
-//Skapar upp flera bilar av typen Vehichle
-Vehichle car1 = new Vehichle("BMW", "SuperSnabb x", VehicleType.Kombi, "AAA333");
-Vehichle car2 = new Vehichle("Volvo", "Krocktestaren", VehicleType.SUV, "BBB112");
-Vehichle car3 = new Vehichle("Saab", "Meh a2007", VehicleType.Sedan, "GGGQQQ");
-
-//Lägger till alla bilar i listan
-vehichles.Add(car1);
-vehichles.Add(car2);
-vehichles.Add(car3);
-/*-------------------------*/
-
-bool running = true;
-ShowMainMenu();
-
-void ShowMainMenu()//Visar huvudmenyn
+namespace RentAWreck
 {
-    do 
+    public enum VehicleType //Lägger till de olika alternativen för enum
     {
-        Clear();
-        WriteLine("[1] Registrera fordon \n[2] Lista fordon \n[3] Avsluta");
-        ConsoleKeyInfo selected = Console.ReadKey();
+        Kombi,
+        Sedan,
+        SUV
+    }
 
-        if (selected.Key == ConsoleKey.D1 || selected.Key == ConsoleKey.NumPad1)
+    class Vehicle //Klass för bilar innehåller metoder för att visa och uppdatera
+    {
+        public Vehicle(string brand, string model, VehicleType type, string licensePlateNumber)//Constructor
         {
-            Clear();
-            ShowAddCarScreen();
+            this.brand = brand;
+            this.model = model;
+            this.type = type;
+            this.licensePlateNumber = licensePlateNumber;
         }
-        if (selected.Key == ConsoleKey.D2 || selected.Key == ConsoleKey.NumPad2)
+
+        private string brand;
+        private string model;
+        private VehicleType type;
+        private string licensePlateNumber;
+
+        public string GetBrand()
         {
-            Clear();
-            ShowCarsScreen();
+            return brand;
         }
-        if (selected.Key == ConsoleKey.D3 || selected.Key == ConsoleKey.NumPad3)
+
+        public void SetBrand(string newBrand)
         {
-            running = false;
-
+            brand = newBrand;
         }
-    } while (running); //testar om running fortfarande är true ananrs avslutas programmet
 
-}
-
-void ShowAddCarScreen() //Visar skärmen där användaren kan lägga till nytt fordon
-{
-    WriteLine("--------------------------Registrera fordon---------------------------------");
-    Write("Märke: ");
-    string inputBrand = ReadLine();
-
-    Write("Modell: ");
-    string inputModel = ReadLine();
-
-    VehicleType inputEnumType;
-    bool inCorrectEnumInput = true; //Så länge denna loop ej har fått ett giltigt enum från användaren så fortsätter den att fråga
-    do
-    {
-        Write("Typ (Kombi, Sedan, SUV): ");
-        string inputType = ReadLine();
-        if (Enum.TryParse(inputType, out VehicleType selectedType))
+        public string GetModel()
         {
-            inputEnumType = selectedType;
-            inCorrectEnumInput = false;
+            return model;
         }
-        else
+
+        public void SetModel(string newModel)
         {
-            WriteLine("Ej giltig fordonstyp.");
-            Write("Välj någon av alternativen Kombi, Sedan eller SUV: ");
+            model = newModel;
         }
-    } while (inCorrectEnumInput);
 
-    Write("Registreringsnummer: ");
-    string inputLicenseplateNumber = ReadLine();
+        public VehicleType GetType()
+        {
+            return type;
+        }
 
-    ConsoleKeyInfo saveNewCar = ReadKey();
-    if (saveNewCar.Key == ConsoleKey.Enter)
-    {
-        Clear();
-        WriteLine("Fordon registrerat");
-        Thread.Sleep(2000);
-        Clear();
-    }
-}
-void ShowCarsScreen() //Visar skärmen där användaren kan se alla registerade fordon
-{
-    WriteLine("----------------------------Lista fordon------------------------------------");
-    WriteLine(" Märke \tModell \t\t\tTyp \tRegistreringsnummer");
-    WriteLine("----------------------------------------------------------------------------");
-    foreach (var car in vehichles)
-    {
-        WriteLine($" {car.GetBrand()} \t{car.GetModel()} \t\t{car.GetType()} \t{car.GetLicensePlateNumber()}");
-    }
-    ReadKey();
-}
+        public void SetType(VehicleType newType)
+        {
+            type = newType;
+        }
 
-public enum VehicleType //Lägger till de olika alternativen för enum
-{
-    Kombi,
-    Sedan,
-    SUV
-}
+        public string GetLicensePlateNumber()
+        {
+            return licensePlateNumber;
+        }
 
-class Vehichle //Klass för bilar innehåller metoder för att visa och uppdatera
-{
-    public Vehichle(string brand, string model, VehicleType type, string licensePlateNumber)//Constructor
-    {
-        this.brand = brand;
-        this.model = model;
-        this.type = type;
-        this.licensePlateNumber = licensePlateNumber;
+        public void SetLicensePlateNumber(string newLicensePlateNumber)
+        {
+            licensePlateNumber = newLicensePlateNumber;
+        }
+
     }
 
-    private string brand;
-    private string model;
-    private VehicleType type;
-    private string licensePlateNumber;
-
-    public string GetBrand()
+    class Program
     {
-        return brand;
-    }
+        //Skapar en tom lista att lagra foron i
+        static List<Vehicle> vehicles = new List<Vehicle>();
 
-    public void SetBrand(string newBrand)
-    {
-        brand = newBrand;
-    }
 
-    public string GetModel()
-    {
-        return model;
-    }
+        static void Main()
+        {
+            Title = "Rent a Wreck";
+            InitializeExampleData(); // Skapar test data
+            ShowMainMenu();
+        }
 
-    public void SetModel(string newModel)
-    {
-        model = newModel;
-    }
+        static void ShowMainMenu()//Visar huvudmenyn
+        {
+            bool running = true;
+            do
+            {
+                Clear();
+                WriteLine("[1] Registrera fordon \n[2] Lista fordon \n[3] Avsluta");
+                ConsoleKeyInfo selected = Console.ReadKey();
 
-    public VehicleType GetType()
-    {
-        return type;
-    }
+                if (selected.Key == ConsoleKey.D1 || selected.Key == ConsoleKey.NumPad1)
+                {
+                    Clear();
+                    ShowAddCarScreen();
+                }
+                if (selected.Key == ConsoleKey.D2 || selected.Key == ConsoleKey.NumPad2)
+                {
+                    Clear();
+                    ShowCarsScreen();
+                }
+                if (selected.Key == ConsoleKey.D3 || selected.Key == ConsoleKey.NumPad3)
+                {
+                    running = false;
 
-    public void SetType(VehicleType newType)
-    {
-        type = newType;
-    }
+                }
+            } while (running); //testar om running fortfarande är true ananrs avslutas programmet
 
-    public string GetLicensePlateNumber()
-    {
-        return licensePlateNumber;
-    }
+        }
 
-    public void SetLicensePlateNumber(string newLicensePlateNumber)
-    {
-        licensePlateNumber = newLicensePlateNumber;
-    }
+        static void ShowAddCarScreen() //Visar skärmen där användaren kan lägga till nytt fordon
+        {
+            WriteLine("--------------------------Registrera fordon---------------------------------");
+            Write("Märke: ");
+            string inputBrand = ReadLine();
 
+            Write("Modell: ");
+            string inputModel = ReadLine();
+
+            VehicleType inputEnumType = VehicleType.Kombi; //Standard värde
+            bool inCorrectEnumInput = true; //Så länge denna loop ej har fått ett giltigt enum från användaren så fortsätter den att fråga
+            do
+            {
+                Write("Typ (Kombi, Sedan, SUV): ");
+                string inputType = ReadLine();
+                if (Enum.TryParse(inputType, out VehicleType selectedType))
+                {
+                    inputEnumType = selectedType;
+                    inCorrectEnumInput = false;
+                }
+                else
+                {
+                    WriteLine("Ej giltig fordonstyp.");
+                    Write("Välj någon av alternativen Kombi, Sedan eller SUV: ");
+                }
+            } while (inCorrectEnumInput);
+
+            Write("Registreringsnummer: ");
+            string inputLicenseplateNumber = ReadLine();
+
+            ConsoleKeyInfo saveNewCar = ReadKey();
+            if (saveNewCar.Key == ConsoleKey.Enter)
+            {
+                SaveNewVehicle(inputBrand, inputModel, inputEnumType, inputLicenseplateNumber);
+                Clear();
+                WriteLine("Fordon registrerat");
+                Thread.Sleep(2000);
+                Clear();
+            }
+            //if (saveNewCar.Key == ConsoleKey.Escape) Clear(); 
+        }
+        static void ShowCarsScreen() //Visar skärmen där användaren kan se alla registerade fordon
+        {
+            WriteLine("----------------------------Lista fordon------------------------------------");
+            WriteLine(" Märke \tModell \t\t\tTyp \tRegistreringsnummer");
+            WriteLine("----------------------------------------------------------------------------");
+            foreach (var car in vehicles)
+            {
+                WriteLine($" {car.GetBrand()} \t{car.GetModel()} \t\t{car.GetType()} \t{car.GetLicensePlateNumber()}");
+            }
+            ReadKey();
+        }
+
+        static void SaveNewVehicle(string inputBrand, string inputModel, VehicleType inputType, string inputLicenseplateNumber)
+        {
+            vehicles.Add(new Vehicle(inputBrand, inputModel, inputType, inputLicenseplateNumber));
+        }
+
+
+        static void InitializeExampleData()
+        {
+            Vehicle car1 = new Vehicle("BMW", "SuperSnabb x", VehicleType.Kombi, "AAA333");
+            Vehicle car2 = new Vehicle("Volvo", "Krocktestaren", VehicleType.SUV, "BBB112");
+            Vehicle car3 = new Vehicle("Saab", "Meh a2007", VehicleType.Sedan, "GGGQQQ");
+
+            vehicles.Add(car1);
+            vehicles.Add(car2);
+            vehicles.Add(car3);
+        }
+    }
 }
 
